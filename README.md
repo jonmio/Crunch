@@ -1,7 +1,7 @@
 # restaurant_finder
 A restaurant ranking algorithm and web-scraper
 
-Restaurant finder takes a city or country as input and scrapes the trip advisor site for all restaurants in the area. All the restaurant reviews are also scraped, and they are processed and put through a ranking algorithm I wrote. After scraping is complete, it will prompt the user to enter the number of restaurants they would like to view, and the program will return the top n restaurants in order. 
+Restaurant finder takes a city or country as input and scrapes the trip advisor site for all restaurants in the area. All the restaurant reviews are also scraped, and they are processed and put through a ranking algorithm I wrote. After scraping is complete, it will prompt the user to enter the number of restaurants they would like to view, and the program will return the top n restaurants in order.
 
 
 Issues
@@ -12,3 +12,5 @@ Issues
 With my restaurant finder, I attempted to fix these two problems by creating my own ranking algorithm. My ranking algorithm is a function with three inputs: total ratings, % of positive ratings and standard deviation of reviews. The total ratings is used as input to an asymptotic function, making the total number of ratings in the restaurant only relevant to a certain number of reviews (~50), preventing discrimination against small restaurants, while still eliminating restaurants that are extremely small.
 
 I weighted negative reviews much heavier than positive reviews in order to approach issue 2. In Yelp, a five star review can completely cancel with a one star review, but in my algorithm 1 and 2 star reviews are double weighted.  
+
+In my code, I also included a more efficient ranking algorithm called the Wilson's 95% Confidence Interval. It is in the ci_lower_bound method.
