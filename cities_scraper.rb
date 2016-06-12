@@ -23,6 +23,24 @@ endurl="-Iceland.html#LOCATION_LIST'"
   end
 end
 
+arr_geocode=arr.map do |x|
+  x.gsub(/[^\d]/, '')
+end
+
+
+
+
+
+# (arr.length).times do |x|
+#   if x==0
+#
+#   elsif x==1
+#   else
+#   end
+# end
+
+#13 pages
+#2 pages
 
 
 
