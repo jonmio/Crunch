@@ -1,17 +1,31 @@
 require 'rubygems'
 require 'nokogiri'
 require 'mechanize'
-
+header={"User-Agent" => "Ruby/#{RUBY_VERSION}"}
 
 agent = Mechanize.new
-page = agent.get("https://www.tripadvisor.ca/Restaurants-g189952-Iceland.html","User-Agent" => "Ruby/#{RUBY_VERSION}")
+page = agent.get("https://www.tripadvisor.ca/Restaurants-g189952-Iceland.html",header)
 page = page.search("div.geos_grid div.geo_name a")
 arr=[]
 page.each do |x|
   arr<<x['href']
 end
 
-baseurl= 'https://www.tripadvisor.ca/Restaurants-g189952-oa20-Iceland.html#LOCATION_LIST'
+baseurl= 'https://www.tripadvisor.ca/Restaurants-g189952-oa'
+num=20
+endurl="-Iceland.html#LOCATION_LIST'"
+4.times do
+  page = agent.get("#{baseurl}#{num.to_s}#{endurl}",header)
+  num+=20
+  page = page.search("div#LOCATION_LIST li a")
+  page.each do |x|
+    arr<<x['href']
+  end
+end
+
+
+
+
 
 
 # name= page.search("h1#HEADING.heading_name").text.strip
