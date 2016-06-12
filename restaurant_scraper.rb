@@ -4,7 +4,7 @@ require 'mechanize'
 require 'restclient'
 
 
-page=Nokogiri::HTML(RestClient.get "https://www.tripadvisor.ca/Restaurant_Review-g189970-d3360521-Reviews-Fridrik_V-Reykjavik_Capital_Region.html","User-Agent" => "Ruby/#{RUBY_VERSION}")
+page=Nokogiri::HTML(RestClient.get "https://www.tripadvisor.ca/Restaurant_Review-g1184954-d6863237-Reviews-Gisli_Eirikur_Helgi_kaffihus_Bakkabraeora-Dalvik_Northeast_Region.html","User-Agent" => "Ruby/#{RUBY_VERSION}")
 name = page.css("h1#HEADING.heading_name").text.strip
 total_ratings = page.css("a.more")[0].text.split(" ")[0].to_s
 ratings = page.css("#ratingFilter ul").text.split(" ")
@@ -13,10 +13,10 @@ hash={}
 hash['name'] = name
 hash['total_ratings'] = total_ratings
 hash['ratings'] = ratings
-print hash
+puts hash
 
 agent = Mechanize.new
-page = agent.get("https://www.tripadvisor.ca/Restaurant_Review-g189970-d2537097-Reviews-Ostabudin-Reykjavik_Capital_Region.html","User-Agent" => "Ruby/#{RUBY_VERSION}")
+page = agent.get("https://www.tripadvisor.ca/Restaurant_Review-g1016825-d6363875-Reviews-Fossatun-Borgarbyggd_West_Region.html","User-Agent" => "Ruby/#{RUBY_VERSION}")
 name= page.search("h1#HEADING.heading_name").text.strip
 total_ratings = page.search("a.more")[0].text.split(" ")[0].to_s
 ratings= page.search("#ratingFilter ul").text.split(" ")
@@ -25,7 +25,7 @@ hash={}
 hash['name'] = name
 hash['total_ratings'] = total_ratings
 hash['ratings'] = ratings
-print hash
+puts hash
 
 
 #Make folder per city
