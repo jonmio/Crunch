@@ -72,19 +72,9 @@ restaurants = {}
       count += 30
       contents=[]
     end
-  elsif x == 67 || x == 72 || x== 89
+  else x == 67 || x == 72 || x== 89
     restaurants["#{arr_cities[x]}"] = []
     page = agent.get("https://www.tripadvisor.ca/#{arr[x]}")
-    page = page.search("div#EATERY_SEARCH_RESULTS a.property_title")
-    page.each do |z|
-      restaurants["#{arr_cities[x]}"] << z['href']
-    end
-    puts restaurants["#{arr_cities[x]}"]
-    puts restaurants.length
-
-  else
-    restaurants["#{arr_cities[x]}"] = []
-    page = agent.get("#{apistart}#{arr_geocode[x]}#{apimiddle}0#{apiend}")
     page = page.search("div#EATERY_SEARCH_RESULTS a.property_title")
     page.each do |z|
       restaurants["#{arr_cities[x]}"] << z['href']
