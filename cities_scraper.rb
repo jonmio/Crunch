@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'nokogiri'
 require 'mechanize'
+require 'pry'
 header={"User-Agent" => "Ruby/#{RUBY_VERSION}"}
 
 agent = Mechanize.new
@@ -27,34 +28,76 @@ arr_geocode=arr.map do |x|
   x.gsub(/[^\d]/, '')
 end
 
+arr_cities=arr.map do |x|
+  x.split("-")[-1].sub('.html',"")
+end
 
 
+apistart = "https://www.tripadvisor.ca/RestaurantSearch?Action=PAGE&geo="
+apimiddle = "&ajax=1&itags=10591&sortOrder=popularity&o=a"
+apiend = "&availSearchEnabled=false"
+restaurants = {}
 
+(arr.length).times do |x|
+  if x==0
+    restaurants["#{arr_cities[x]}"] = []
+    count=0
+    12.times do |y|
+      contents = []
+      page=agent.get("#{apistart}#{arr_geocode[x]}#{apimiddle}#{count.to_s}#{apiend}")
+      page= page.search("div#EATERY_SEARCH_RESULTS a.property_title")
+      page.each do |z|
+        contents << z['href']
+      end
+      contents.each do |z|
+        restaurants["#{arr_cities[x]}"] << z
+      end
+      count += 30
+      contents=[]
+    end
 
-# (arr.length).times do |x|
-#   if x==0
-#
-#   elsif x==1
-#   else
-#   end
+  elsif x == 1
+    restaurants["#{arr_cities[x]}"] = []
+    count=0
+    2.times do |y|
+      contents = []
+      page=agent.get("#{apistart}#{arr_geocode[x]}#{apimiddle}#{count.to_s}#{apiend}")
+      page= page.search("div#EATERY_SEARCH_RESULTS a.property_title")
+      page.each do |z|
+        contents << z['href']
+      end
+      contents.each do |z|
+        restaurants["#{arr_cities[x]}"] << z
+      end
+      count += 30
+      contents=[]
+    end
+  # elsif x ==
+  #
+
+  else
+    restaurants["#{arr_cities[x]}"] = []
+    page = agent.get("#{apistart}#{arr_geocode[x]}#{apimiddle}0#{apiend}")
+    page = page.search("div#EATERY_SEARCH_RESULTS a.property_title")
+    page.each do |z|
+      restaurants["#{arr_cities[x]}"] << z['href']
+    end
+    puts restaurants["#{arr_cities[x]}"]
+    puts restaurants.length
+  end
+end
+
+# ##TEST
+# #https://www.tripadvisor.ca/RestaurantSearch?Action=PAGE&geo=3567307&ajax=1&itags=10591&sortOrder=popularity&o=a0&availSearchEnabled=false
+# page = agent.get("#{apistart}#{arr_geocode[89]}#{apimiddle}0#{apiend}")
+# puts arr_geocode[89]
+# puts page
+# binding.pry
+# page = page.search("div#EATERY_SEARCH_RESULTS a.property_title")
+# puts page
+
+# page.each do |x|
+#   puts x['href']
 # end
-
-#13 pages
-#2 pages
-
-
-
-
-
-# name= page.search("h1#HEADING.heading_name").text.strip
-# total_ratings = page.search("a.more")[0].text.split(" ")[0].to_s
-# ratings= page.search("#ratingFilter ul").text.split(" ")
-# ratings=ratings.select {|x| ratings.index(x)==1 || ratings.index(x)==4 ||ratings.index(x)==6 ||ratings.index(x)==8 || ratings.index(x)==10}
-# hash={}
-# hash['name'] = name
-# hash['total_ratings'] = total_ratings
-# hash['ratings'] = ratings
-# puts hash
-
-
-#Make folder per city
+#API DOES NOT WORK FOR THOSE RESTAURANTS LEADS TO REDIRECT
+#68,73,90
