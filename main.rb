@@ -24,10 +24,7 @@ restaurant_links.each do |key, array|
     name: restaurant_info['name'],
     city: restaurant_info['city'],
     total_ratings: restaurant_info['total_ratings'],
-    ratings: restaurant_info['ratings']
+    ratings: restaurant_info['ratings'].to_s.gsub(/[\\\"\[\]\,]/, '')
     )
   end
 end
-
-print database
-print database.length

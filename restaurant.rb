@@ -11,3 +11,11 @@ class Restaurant < ActiveRecord::Base
 end
 
 Restaurant.auto_upgrade!
+
+Restaurant.all.each do |restaurant|
+  puts restaurant['name']
+  puts restaurant['city']
+  puts restaurant['total_ratings']
+  puts restaurant['ratings']
+  puts "\n\n"
+end
