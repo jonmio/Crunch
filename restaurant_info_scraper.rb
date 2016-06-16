@@ -1,6 +1,3 @@
-require 'rubygems'
-require 'nokogiri'
-require 'mechanize'
 # require 'restclient'
 
 def scrape_restauraunt_page(city,url)
@@ -28,7 +25,7 @@ def scrape_restauraunt_page(city,url)
   restaurant_info = {}
   restaurant_info['name'] = name
   restaurant_info['city'] = city
-  restaurant_info['total_ratings'] = total_ratings
+  restaurant_info['total_ratings'] = total_ratings.to_i
   restaurant_info['ratings'] = ratings
   return restaurant_info
 end
