@@ -8,6 +8,7 @@ def scrape_restauraunt_page(city,url)
 
   begin     #pages with 0 or 1 ratings have different page structures and will raise errors, these restaurants have too few reviews to be ranked so they will be removed from the database
     total_ratings = page.search("a.more")[0].text.split(" ")[0]    #get total ratings
+    total_ratings.gsub!(",","")
   rescue
     total_ratings = nil
   end
