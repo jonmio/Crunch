@@ -52,7 +52,9 @@ Restaurant.all.order(:score).last(100).each do |restaurant|
   puts restaurant.name
 end
 
-y=-1/(x/25)+score/total_rating
+#y=-1/(x/25)+score/total_rating
+#var?
+
  #checks for minimum reviews to be considered
 
 
