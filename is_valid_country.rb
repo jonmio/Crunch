@@ -17,4 +17,6 @@ def is_valid_country
     puts "Trip advisor does not support this country."
     exit
   end
+
+  return country
 end
