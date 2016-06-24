@@ -11,21 +11,22 @@ def get_city_links(country,country_code)
 
 
   last_page_number.times do |page_number|
-    num = 0
     if page_number == 0 #page 1 has different layout
       agent.get("#{root_url}oa#{num.to_s}-#{country}.html#LOCATION_LIST", header)
       cities = agent.page.search("div.geos_grid div.geo_name a")  #This CSS selector will return all anchor elments which are the city titles
       cities.each do |links|
         url_cities_in_country << links['href']      #gets value of href attribute (link)
       end
+
     else
       agent.get("#{root_url}oa#{num.to_s}-#{country}.html#LOCATION_LIST", header)
-      num += 20         #Increment num by 20 to change url to reach necity_numbert page
       cities = agent.page.search("div#LOCATION_LIST li a")        #Use CSS selects to get links for cities. The selector is different than page 1 because TRIP advisor changes the page format.
       cities.each do |links|
         url_cities_in_country<<links['href']
       end
     end
+    num += 20         #Increment num by 20 to change url to reach necity_numbert page
   end
+
   return url_cities_in_country
 end
