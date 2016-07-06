@@ -6,8 +6,14 @@ def get_city_links(country,country_code)
 
 
   agent.get("#{root_url}#{country}.html", header)
-  last_page_number = agent.page.search("div.pageNumbers a").last.text.to_i
+  if agent.page.search("div.pageNumbers a").last
+    last_page_number = agent.page.search("div.pageNumbers a").last.text.to_i
+  else
+    last_page_number = 1
+  end
+
   num = 0
+
 
 
   last_page_number.times do |page_number|
@@ -27,6 +33,9 @@ def get_city_links(country,country_code)
     end
     num += 20         #Increment num by 20 to change url to reach necity_numbert page
   end
-
+  if url_cities_in_country.length == 0
+    return nil
+  else
   return url_cities_in_country
+  end
 end

@@ -12,6 +12,7 @@ class Restaurant < ActiveRecord::Base
   field :total_ratings, as: :integer
   field :ratings, as: :string
   field :score, as: :integer
+  field :country, as: :string
 end
 
 Restaurant.auto_upgrade!

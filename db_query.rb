@@ -1,53 +1,54 @@
-def db_query
-  require 'restauraunt.rb'
-  require 'rank'
-  Restaurant.all.each do |restaurant|
-    ratings = restaurant.ratings.split(' ')
-    total_ratings = 0
-    score = 0
-    ratings.length.times do |index|
-      case index
-        when 0
-          total_ratings += ratings[index].to_i*2
-          score += ratings[index].to_i*2
-        when 1
-          total_ratings += ratings[index].to_i
-          score += ratings[index].to_i
-        when 3
-          total_ratings += ratings[index].to_i*2
-        when 4
-          total_ratings += ratings[index].to_i*4
-      end
-    end
-    restaurant.update(score: ci_lower_bound(score,total_ratings,0.95))
-  end
+require_relative 'restaurant'
 
-  duplicates = Restaurant.select(:name,:ratings).group(:name,:ratings).having("count(*) > 1")
-  duplicate_id = []
+
+def db_query(num)
+  duplicates = Restaurant.select(:name,:ratings).group(:country,:ratings, :name).having("count(*) > 1").all
   duplicates.each do |restaurant|
-    duplicate_id << Restaurant.find_by(name: restaurant.name) #Destroy one instance
+    cache = Restaurant.where(name: restaurant.name).where(ratings: restaurant.ratings).first
+    Restaurant.where(name: restaurant.name).where(ratings: restaurant.ratings).destroy_all
+    Restaurant.create(
+    name: cache.name,
+    country: cache.country,
+    city: cache.city,
+    ratings: cache.ratings,
+    score: cache.score,
+    total_ratings: cache.total_ratings
+    )
   end
-  Restaurant.destroy(duplicate_id)
-
-  Restaurant.all.order(:score).last(10).each do |restaurant|
-  puts restaurant.name
+  Restaurant.all.order(score: :desc).first(num).each do |restaurant|
+    puts restaurant.name
   end
-  binding.pry
 end
 
 
-#Skatafell
-#Heimaey Island
-##CHECK for duplicate restuarants
+#Hos Thea
+# Efendi Tea & Coffee House
+# Valentin
+# 1877
+# Hav - Fisk & Skalldyr AS
+# Riso mat & kaffebar
+# Himalaya Tandori Indian Restaurant
+# Graziella
+# Statholdergaarden
+# Zenzi by Realmat
 
-#804 from generalized
-
-#y=-1/(x/25)+score/total_rating
-#var?
-
- #checks for minimum reviews to be considered #variance
-
-
-
-#823
-#1843 total
+# La Montgolfiere Henri Geraci
+# Le Louis XV - Alain Ducasse a l'Hotel de Paris
+# Restaurant Joel Robuchon Monte-Carlo
+# Blue Bay
+# Graziella
+# Maya Bay
+# Avenue 31
+# Le Vistamar
+# Il Terrazzino
+# Restaurant Yoshi
+# Monaco Beefbar
+# Huit et Demi
+# Valentin
+# Quai des Artistes
+# Nobu Fairmont Monte-Carlo
+# l'Horizon Deck
+# Lo Sfizio
+# Mozza
+# La Saliere
+# La Note Bleue

@@ -1,5 +1,4 @@
 def is_valid_country
-  require 'mechanize'
 
   tripadvisor_root_url = "https://www.tripadvisor.ca/"
 
