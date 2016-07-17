@@ -1,5 +1,5 @@
 # restaurant_finder
-A restaurant ranking algorithm and web-scraper
+A restaurant recommendation engine with a custom ranking algorithm
 
 Restaurant finder takes a city or country as input and scrapes the trip advisor site for all restaurants in the area. All the restaurant reviews are also scraped, and they are processed and put through a ranking algorithm I wrote. After scraping is complete, it will prompt the user to enter the number of restaurants they would like to view, and the program will return the top n restaurants in order.
 
