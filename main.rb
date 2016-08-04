@@ -46,10 +46,10 @@ country_code = end_link.gsub(/[^\d]/,"")
 country = end_link.split("-")[1]
 
 
-
+puts "getting cities"
 #returns an array of all of the cities in the country
 city_links = get_city_links(country, country_code)
-
+puts "done cities"
 
 #city_links will be nill if a city is entered. If nill, country_code and country_name obtained above are actually city names and geocodes.
 if city_links == nil
@@ -62,10 +62,10 @@ else
   city_names = get_city_names(city_links)
   geocodes = get_city_geocodes(city_links)
 end
-
-#Returns hash with key as city and value as an array of urls for every restaurant in the city
+puts "getting restaurants links"
+#Getting restuarnta links
 restaurant_links = get_restaurant_urls(geocodes, city_names)
-
+puts "getting reviews"
 #Goes through each city key and scrapes every restaurant url value and saves restaurant info to db
 restaurant_links.each do |key, array|
   array.length.times do |index|
