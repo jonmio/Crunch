@@ -32,7 +32,7 @@ list = []
   end
 
   if running_thread_count > 10
-    sleep(3)
+    sleep(1)
   end
 
   list << Thread.new do

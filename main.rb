@@ -9,6 +9,7 @@ require "mechanize"
 require "nokogiri"
 require "net/http"
 require "open-uri"
+require "rest-client"
 
 #debugger
 binding.pry
@@ -67,15 +68,25 @@ puts "getting restaurants links"
 restaurant_links = get_restaurant_urls(geocodes, city_names)
 puts "getting reviews"
 #Goes through each city key and scrapes every restaurant url value and saves restaurant info to db
+def running_thread_count
+  Thread.list.select {|thread| thread.status == "run"}.count
+end
 
 threads =[]
 restaurant_links.each do |key, array|
   array.length.times do |index|
-    threads << scrape_restaurant_page(key,"https://www.tripadvisor.ca/#{array[index]}")
+    if running_thread_count > 10
+      puts "hello"
+      sleep(1)
+      threads << Thread.new {scrape_restaurant_page(key,"https://www.tripadvisor.ca/#{array[index]}")}
+    else
+      threads << Thread.new {scrape_restaurant_page(key,"https://www.tripadvisor.ca/#{array[index]}")}
+    end
+
   end
 end
+binding.pry
 threads.each do |thread|
-  thread.join
   restaurant_info = thread.value
   Restaurant.create(
   name: restaurant_info["name"],

@@ -1,12 +1,11 @@
 require 'unirest'
 
 def scrape_restaurant_page(city,url)
-  agent = Mechanize.new       #create new mechanize object
+  # agent = Mechanize.new       #create new mechanize object
   #send GET request to restaurant url
   # page = agent.get(url, "User-Agent" => "Ruby/#{RUBY_VERSION}")  #some websites do not respond to scrapers that do not identify themselves
 
-
-  Unirest.get url, headers:{"User-Agent"=>"Ruby/#{RUBY_VERSION}" } do |response|
+  response = RestClient.get url, headers:{"User-Agent"=>"Ruby/#{RUBY_VERSION}" }
     page= Nokogiri::HTML(response.body)
 
     name = page.css("h1#HEADING.heading_name").text.strip       #get name of restaurant with css selector
@@ -34,5 +33,4 @@ def scrape_restaurant_page(city,url)
     restaurant_info['total_ratings'] = total_ratings.to_i
     restaurant_info['ratings'] = ratings
     restaurant_info
-  end
 end
