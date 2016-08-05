@@ -67,21 +67,42 @@ puts "getting restaurants links"
 restaurant_links = get_restaurant_urls(geocodes, city_names)
 puts "getting reviews"
 #Goes through each city key and scrapes every restaurant url value and saves restaurant info to db
+
+threads =[]
 restaurant_links.each do |key, array|
   array.length.times do |index|
-    restaurant_info= scrape_restaurant_page(key,"https://www.tripadvisor.ca/#{array[index]}")
-    Restaurant.create(
-    name: restaurant_info["name"],
-    city: restaurant_info["city"],
-    total_ratings: restaurant_info["total_ratings"],
-    #ratings is an array that was coerced into a string. Each element in the array is the number of excellent,good,okay,bad and terrible ratings respectively
-    #the gsub removes the the square brackets and commas from stringified version of the array and creates and separates each tier of ratings with a space
-    ratings: restaurant_info["ratings"].to_s.gsub(/[\\\"\[\]\,]/, ''),
-    country: country
-    )
-    puts Restaurant.all.length
+    threads << scrape_restaurant_page(key,"https://www.tripadvisor.ca/#{array[index]}")
   end
 end
+threads.each do |thread|
+  thread.join
+  restaurant_info = thread.value
+  Restaurant.create(
+  name: restaurant_info["name"],
+  city: restaurant_info["city"],
+  total_ratings: restaurant_info["total_ratings"],
+  #ratings is an array that was coerced into a string. Each element in the array is the number of excellent,good,okay,bad and terrible ratings respectively
+  #the gsub removes the the square brackets and commas from stringified version of the array and creates and separates each tier of ratings with a space
+  ratings: restaurant_info["ratings"].to_s.gsub(/[\\\"\[\]\,]/, ''),
+  country: country
+  )
+end
+
+# restaurant_links.each do |key, array|
+#   array.length.times do |index|
+#     restaurant_info= scrape_restaurant_page(key,"https://www.tripadvisor.ca/#{array[index]}")
+#     Restaurant.create(
+#     name: restaurant_info["name"],
+#     city: restaurant_info["city"],
+#     total_ratings: restaurant_info["total_ratings"],
+#     #ratings is an array that was coerced into a string. Each element in the array is the number of excellent,good,okay,bad and terrible ratings respectively
+#     #the gsub removes the the square brackets and commas from stringified version of the array and creates and separates each tier of ratings with a space
+#     ratings: restaurant_info["ratings"].to_s.gsub(/[\\\"\[\]\,]/, ''),
+#     country: country
+#     )
+#     puts Restaurant.all.length
+#   end
+# end
 
 #sort restaurants and display ranked list
 Restaurant.calculate_scores
