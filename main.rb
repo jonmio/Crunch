@@ -2,7 +2,6 @@ require_relative "city"
 require_relative "scrape_restaurant_page"
 require_relative "restaurant"
 
-
 require "rubygems"
 require "pry"
 require "mechanize"
@@ -11,18 +10,16 @@ require "net/http"
 require "open-uri"
 require "rest-client"
 
-#multithread
-#remove mechanize
+# multithread
+# remove mechanize
 
 
 
 
 
-#debugger
+# debugger
 binding.pry
 
-#Stores urls that will be processed concurrently
-q = Queue.new
 
 
 #create new instance of mechanize to scrape page
@@ -76,27 +73,51 @@ else
 end
 puts "getting restaurants links"
 #Getting restuarnta links
+
+
 restaurant_links = get_restaurant_urls(geocodes, city_names)
 puts "getting reviews"
-#Goes through each city key and scrapes every restaurant url value and saves restaurant info to db
-def running_thread_count
-  Thread.list.select {|thread| thread.status == "run"}.count
-end
 
-threads =[]
+
+
+#Stores urls that will be processed concurrently
+q = Queue.new
+semaphore = Mutex.new
+
+
+
 restaurant_links.each do |key, array|
   array.length.times do |index|
-    if running_thread_count > 10
-      puts "hello"
-      sleep(0.5)
-    end
-    threads << Thread.new {scrape_restaurant_page(key,"https://www.tripadvisor.ca/#{array[index]}")}
+    city = key
+    link = array[index]
+    q.push([city,link])
+  end
+end
+
+restaurants = []
+threads =[]
+
+NUM_THREADS = 10
+
+NUM_THREADS.times do
+  threads << Thread.new do
+    while q.length != 0
+      to_do = q.pop
+      city = to_do[0]
+      link = to_do[1]
+      restaurant_info = scrape_restaurant_page(city,link)
+      semaphore.synchronize{restaurants << restaurant_info}
+      sleep(1)
     end
   end
 end
-binding.pry
+
 threads.each do |thread|
-  restaurant_info = thread.value
+  thread.join
+end
+
+
+restaurants.each do |restaurant_info|
   Restaurant.create(
   name: restaurant_info["name"],
   city: restaurant_info["city"],
@@ -107,22 +128,58 @@ threads.each do |thread|
   country: country
   )
 end
-
+#
+# #Goes through each city key and scrapes every restaurant url value and saves restaurant info to db
 # restaurant_links.each do |key, array|
 #   array.length.times do |index|
-#     restaurant_info= scrape_restaurant_page(key,"https://www.tripadvisor.ca/#{array[index]}")
-#     Restaurant.create(
-#     name: restaurant_info["name"],
-#     city: restaurant_info["city"],
-#     total_ratings: restaurant_info["total_ratings"],
-#     #ratings is an array that was coerced into a string. Each element in the array is the number of excellent,good,okay,bad and terrible ratings respectively
-#     #the gsub removes the the square brackets and commas from stringified version of the array and creates and separates each tier of ratings with a space
-#     ratings: restaurant_info["ratings"].to_s.gsub(/[\\\"\[\]\,]/, ''),
-#     country: country
-#     )
-#     puts Restaurant.all.length
+#     if running_thread_count > 10
+#       puts "hello"
+#       sleep(0.5)
+#     end
+#     threads << Thread.new {scrape_restaurant_page(key,"https://www.tripadvisor.ca/#{array[index]}")}
+#     end
 #   end
 # end
-
-#sort restaurants and display ranked list
+#
+# # restaurant_links.each do |key, array|
+# #   array.length.times do |index|
+# #     if running_thread_count > 10
+# #       puts "hello"
+# #       sleep(0.5)
+# #     end
+# #     threads << Thread.new {scrape_restaurant_page(key,"https://www.tripadvisor.ca/#{array[index]}")}
+# #     end
+# #   end
+# # end
+# binding.pry
+# threads.each do |thread|
+#   restaurant_info = thread.value
+#   Restaurant.create(
+#   name: restaurant_info["name"],
+#   city: restaurant_info["city"],
+#   total_ratings: restaurant_info["total_ratings"],
+#   #ratings is an array that was coerced into a string. Each element in the array is the number of excellent,good,okay,bad and terrible ratings respectively
+#   #the gsub removes the the square brackets and commas from stringified version of the array and creates and separates each tier of ratings with a space
+#   ratings: restaurant_info["ratings"].to_s.gsub(/[\\\"\[\]\,]/, ''),
+#   country: country
+#   )
+# end
+#
+# # restaurant_links.each do |key, array|
+# #   array.length.times do |index|
+# #     restaurant_info= scrape_restaurant_page(key,"https://www.tripadvisor.ca/#{array[index]}")
+# #     Restaurant.create(
+# #     name: restaurant_info["name"],
+# #     city: restaurant_info["city"],
+# #     total_ratings: restaurant_info["total_ratings"],
+# #     #ratings is an array that was coerced into a string. Each element in the array is the number of excellent,good,okay,bad and terrible ratings respectively
+# #     #the gsub removes the the square brackets and commas from stringified version of the array and creates and separates each tier of ratings with a space
+# #     ratings: restaurant_info["ratings"].to_s.gsub(/[\\\"\[\]\,]/, ''),
+# #     country: country
+# #     )
+# #     puts Restaurant.all.length
+# #   end
+# # end
+#
+# #sort restaurants and display ranked list
 Restaurant.calculate_scores
