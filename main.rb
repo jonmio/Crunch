@@ -11,8 +11,19 @@ require "net/http"
 require "open-uri"
 require "rest-client"
 
+#multithread
+#remove mechanize
+
+
+
+
+
 #debugger
 binding.pry
+
+#Stores urls that will be processed concurrently
+q = Queue.new
+
 
 #create new instance of mechanize to scrape page
 agent = Mechanize.new
@@ -77,12 +88,10 @@ restaurant_links.each do |key, array|
   array.length.times do |index|
     if running_thread_count > 10
       puts "hello"
-      sleep(1)
-      threads << Thread.new {scrape_restaurant_page(key,"https://www.tripadvisor.ca/#{array[index]}")}
-    else
-      threads << Thread.new {scrape_restaurant_page(key,"https://www.tripadvisor.ca/#{array[index]}")}
+      sleep(0.5)
     end
-
+    threads << Thread.new {scrape_restaurant_page(key,"https://www.tripadvisor.ca/#{array[index]}")}
+    end
   end
 end
 binding.pry
