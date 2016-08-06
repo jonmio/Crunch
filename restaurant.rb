@@ -14,7 +14,6 @@ class Restaurant < ActiveRecord::Base
   field :total_ratings, as: :integer
   field :ratings, as: :string
   field :score, as: :integer
-  field :country, as: :string
 
 
   #Remove all duplicated restaurants if name of entry and ratings are the same. Sometimes TA displays the same restaurant in diff cities
@@ -28,7 +27,6 @@ class Restaurant < ActiveRecord::Base
       Restaurant.where(name: restaurant.name).where(ratings: restaurant.ratings).destroy_all
       Restaurant.create(
       name: cache.name,
-      country: cache.country,
       city: cache.city,
       ratings: cache.ratings,
       score: cache.score,

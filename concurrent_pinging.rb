@@ -18,7 +18,7 @@ def get_responses(urls)
         url = q.pop
         res = get(url)
         semaphore.synchronize{response_bodies[extract_geocode(url)] = res}
-        sleep(1)
+        puts "ping aling"
       end
     end
   end

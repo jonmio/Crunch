@@ -20,9 +20,11 @@ def scrape_rest_page(json)
     end
     Restaurant.create(
     name: name ,
-    city: $map[extract_geocode(k)] ,
+    city: MAP[extract_geocode(k)],
     total_ratings: total_ratings,
-    ratings: ratings
+      #ratings is an array that was coerced into a string. Each element in the array is the number of excellent,good,okay,bad and terrible ratings respectively
+      #the gsub removes the the square brackets and commas from stringified version of the array and creates and separates each tier of ratings with a space
+    ratings: ratings.to_s.gsub(/[\\\"\[\]\,]/, '')
     )
     # restaurant_info = {}
     # # #store information in restauraunt_info

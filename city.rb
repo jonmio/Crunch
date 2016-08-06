@@ -1,4 +1,3 @@
-require_relative "misc"
 def get_city_links(country,country_code)
   root_url = "https://www.tripadvisor.ca/Restaurants-g#{country_code}-"
   # agent = Mechanize.new
@@ -83,7 +82,7 @@ def get_restaurant_urls
   urls =[]
   #In each city page, tripadvisor dynamically loads content between differnet pages by making an ajax call
   #loop goes through each city to collect all restaurant links in each of the cities
-  $map.each do |k,v|
+  MAP.each do |k,v|
     begin
     page = get("#{apistart}#{k}#{apimiddle}0#{apiend}")
     rescue
