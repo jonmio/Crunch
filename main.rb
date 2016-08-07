@@ -28,7 +28,7 @@ require "rest-client"
   #Ex. placeholder.com => placeholder's ratingss
 
 
-
+binding.pry
 
 
 #############HANDLES INPUT
