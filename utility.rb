@@ -1,3 +1,16 @@
+#Initialize constant for thread pool
+NUM_THREADS = 4
+
+
+def extract_geocode(url)
+  url.gsub(/[^\d]/, '')
+end
+
+def get(url)
+  page = RestClient.get url, headers: {"User-Agent"=>"Ruby/#{RUBY_VERSION}"}
+  Nokogiri::HTML(page.body)
+end
+
 def get_responses(urls)
   q = Queue.new
   semaphore = Mutex.new
@@ -18,7 +31,7 @@ def get_responses(urls)
         url = q.pop
         res = get(url)
         semaphore.synchronize{response_bodies[extract_geocode(url)] = res}
-        puts "ping aling"
+        print "#{q.length}\n"
       end
     end
   end

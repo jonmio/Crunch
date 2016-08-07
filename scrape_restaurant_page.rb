@@ -26,13 +26,6 @@ def scrape_rest_page(json)
       #the gsub removes the the square brackets and commas from stringified version of the array and creates and separates each tier of ratings with a space
     ratings: ratings.to_s.gsub(/[\\\"\[\]\,]/, '')
     )
-    # restaurant_info = {}
-    # # #store information in restauraunt_info
-    # restaurant_info['name'] = name
-    # restaurant_info['city'] = city
-    # restaurant_info['total_ratings'] = total_ratings.to_i
-    # restaurant_info['ratings'] = ratings
-    # restaurant_info
   end
 end
 

@@ -16,7 +16,6 @@ def get_city_links(country,country_code)
 
   #Each page differs by 20 in the url, starting from 0 on page 1.
   num = 0
-
   #go through each page
   last_page_number.times do |page_number|
     #page 1 has different layout with diff css tags
@@ -24,6 +23,11 @@ def get_city_links(country,country_code)
       country_page_showing_cities= get("#{root_url}oa#{num.to_s}-#{country}.html#LOCATION_LIST")
       #This CSS selector will return all anchor elments which are the city titles
       cities = country_page_showing_cities.css("div.geos_grid div.geo_name a")
+      #if user typed in a city instead of country, no cities will be scraped and nil is returned
+
+      if cities.length == 0
+        return nil
+      end
       cities.each do |links|
 
        #gets value of href attribute (link)
@@ -40,13 +44,7 @@ def get_city_links(country,country_code)
     num += 20
   end
 
-
-  #if user typed in a city instead of country, no cities will be scraped and nil is returned
-  if url_cities_in_country.length == 0
-    return nil
-  else
-    return url_cities_in_country
-  end
+  return url_cities_in_country
 end
 
 
