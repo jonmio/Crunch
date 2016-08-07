@@ -18,20 +18,23 @@ class Restaurant < ActiveRecord::Base
 
   #Remove all duplicated restaurants if name of entry and ratings are the same. Sometimes TA displays the same restaurant in diff cities
   def self.remove_duplicates
-    # duplicates = Restaurant.select(:name,:ratings).group(:country,:ratings, :name).having("count(*) > 1").all
-    #returns name and ratings of duplicated restuarant
+    #find restaurants where name and rating are the same
     duplicates = Restaurant.select(:name,:ratings).group(:ratings, :name).having("count(*) > 1").all
-    #Saves one copy of the restaurant and delete the other duplicates in the database
+    #Deletes duplicates and keeps 1 copy
     duplicates.each do |restaurant|
-      cache = Restaurant.where(name: restaurant.name).where(ratings: restaurant.ratings).first
-      Restaurant.where(name: restaurant.name).where(ratings: restaurant.ratings).destroy_all
-      Restaurant.create(
-      name: cache.name,
-      city: cache.city,
-      ratings: cache.ratings,
-      score: cache.score,
-      total_ratings: cache.total_ratings
-      )
+      duplicated_restaurant = Restaurant.where(name: restaurant.name).where(ratings: restaurant.ratings)
+      while duplicated_restaurant.length < 1
+        Restaurant.destroy(duplicated_restaurant)
+      end
+      # cache = Restaurant.where(name: restaurant.name).where(ratings: restaurant.ratings).first
+      # Restaurant.where(name: restaurant.name).where(ratings: restaurant.ratings).destroy_all
+      # Restaurant.create(
+      # name: cache.name,
+      # city: cache.city,
+      # ratings: cache.ratings,
+      # score: cache.score,
+      # total_ratings: cache.total_ratings
+      # )
     end
   end
 
