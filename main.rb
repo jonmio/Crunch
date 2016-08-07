@@ -46,7 +46,7 @@ end_of_url = RestClient.get(country_page_url).request.url.sub("https://www.tripa
 #get geocode form redirect url
 country_code = extract_geocode(end_of_url)
 #change country/city name to tripadvisor's version of the country name the user typed in
-country = end_link.split("-")[1]
+country = end_of_url.split("-")[1]
 
 
 
