@@ -1,5 +1,5 @@
 #Initialize constant for thread pool
-NUM_THREADS = 4
+NUM_THREADS = 3
 
 
 def extract_geocode(url)

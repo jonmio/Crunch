@@ -15,9 +15,18 @@ require "nokogiri"
 require "rest-client"
 
 
-binding.pry
 
+
+binding.pry
 tripadvisor_root_url = "https://www.tripadvisor.ca/"
+
+
+
+
+
+
+
+
 
 #############HANDLES INPUT
 puts "Which country or city are you travelling to? Please use underscores instead of spaces"
@@ -56,7 +65,7 @@ country = end_of_url.split("-")[1]
 
 ########## GET LIST OF URLS FOR EACH CITY IN THE SPECIFIED COUNTRY
 puts "getting cities"
-#get_city_links returns an array of urls that go to a city's restaurant index page
+#get_city_links returns an array of urls that go to a city's index page
 city_links = get_city_links(country, country_code)
 puts "done cities"
 
@@ -83,20 +92,42 @@ end
 
 
 
-
-
-
-
-puts "getting restaurants links"
-#Getting restuarnta links
+######### GETS A LINK TO EACH CITY PAGE OF RETAURANTS (CONTAINS 30 RESTAURANT LINKS) AND COLLECTS LINKS TO RESTAURANTS
+puts "getting restaurant links"
+#An array of urls for every city page
 
 urls_for_each_city = get_restaurant_urls
+#visits url
 r = get_responses(urls_for_each_city)
+
 1000.times do
   puts "******************"
 end
+#scrape each page for links to restaruants
+#All rest url is an array of restaurant links
 all_rest_url = gather_restaurant_links_by_scraping(r)
-scrape_rest_page(get_responses(all_rest_url))
 
-#sort restaurants and display ranked list
+
+
+
+
+
+
+
+
+#########VISIT ALL RESTAURANT PAGES AND SCRAPE FOR RATING INFORMATION AND RESTAURANT INFO
+#get response form each url
+raw_restaurant_responses = get_responses(all_rest_url)
+#scrape response for info and save to db
+scrape_rest_page(raw_restaurant_responses)
+
+
+
+
+
+
+
+
+
+###########APPLIES RANKING ALGORITHM AND SCORES RESTARAUNTS AND GIVES OUTPUT
 Restaurant.calculate_scores
