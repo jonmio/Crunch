@@ -47,22 +47,31 @@ class Restaurant < ActiveRecord::Base
   end
 
   #Ranks the restaurant based on ratings and total ratings
-  #Note that method1 refers to a series of methods used to rank the restaurant using wilson's confidence interval while method2 refers to methods to use with my own ranking algorithm
-  #To switch to my ranking algo, replace sum_score_method1 with sum_score_method2, call sd method for each restaurant in the loop below and use the existing code for total_ratings. Pass these values into my_ranker in place of ci_lower_bound
+  #Note that any method ending with method1 refers are used with wilson's confidence interval ranking algorithm while method2 refers to methods that are used with my own ranking algorithm
+  #Currently wilson's confidence interval is being used. It works better with restaurants that have fewer reviews
+  #To switch to my ranking algo, in calculate_scores
+  # 1) replace sum_score_method1 with sum_score_method2,
+  # 2) Comment out   restaurant.update(score: ci_lower_bound(positive_ratings,total_ratings,0.95))
+  # 3) Uncomment line with sd = sd(ratings, total_ratings, positive_ratings)
+  # 4) Uncomment restaurant.update(score: my_ranker(positive_ratings,total_ratings, sd))
   def self.calculate_scores
     Restaurant.all.each do |restaurant|
       ratings = restaurant.ratings.split(" ")
       ratings = ratings.map {|rating| rating.to_f}
 
-      #Tally up ratings with heavy weighting on negative reviews.
+      #Tally up ratings with heavy weighting on negative reviews
       positive_ratings = sum_score_method1(ratings)
       total_ratings = sum_total_ratings(ratings)
+      # sd = sd(ratings, total_ratings, positive_ratings)
       if total_ratings != 0
         restaurant.update(score: ci_lower_bound(positive_ratings,total_ratings,0.95))
+        # restaurant.update(score: my_ranker(positive_ratings,total_ratings, sd))
       else
         restaurant.update(score: 0)
       end
     end
+
+    #Ask user how many entries they want to see
     puts "Done execution. How many top restuarants would you like to view"
     num_restaurant = gets.chomp().to_i
     Restaurant.remove_duplicates

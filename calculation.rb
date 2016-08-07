@@ -1,6 +1,7 @@
 require 'statistics2'
 
 #Wilson's confidence interval method of ranking. Uses current number of votes as a sample of the whole population.
+# Good reading: http://www.evanmiller.org/how-not-to-sort-by-average-rating.html
 def ci_lower_bound(positive_ratings, total_ratings, confidence)
   #The confidence argument tells the ranking algorithm how aggresive it can be with its assumptions
   if total_ratings == 0
@@ -9,12 +10,14 @@ def ci_lower_bound(positive_ratings, total_ratings, confidence)
   z = Statistics2.pnormaldist(1-(1-confidence)/2)
   phat = 1.0*positive_ratings/total_ratings
   value = (phat + z*z/(2*total_ratings) - z * Math.sqrt((phat*(1-phat)+z*z/(4*total_ratings))/total_ratings))/(1+z*z/total_ratings)
-  #make score larger
+  #make score larger for readability
   value*10**4
 end
 
 def sum_score_method1(ratings)
-  #This calculates the score (positive reviews) of the restaurant. Excellent = 2 positive, Good = 1, any other class of reviews are not positive
+  #ci_lower_bound can only rank something if it only has 2 states of reviews - positive or neative. it can't handle the five tier system of TA
+  #sum_score_method1 converts the ratings of a restaurant into these "binary" states and sums up the score of the restaurant
+  #Excellent = 2 positive, Good = 1, any other class of reviews are not positive so are not added to score
   score = 0
   ratings.length.times do |index|
     case index
@@ -29,6 +32,7 @@ end
 
 def sum_total_ratings(ratings)
   #Counts total ratings, where excellent = 2, good = 1, okay =1, bad = 2, terrible = 4
+  #Bad and terrible ratings are double weighted to put more empahsis on negative reviews. Refer to README
   total_ratings = 0
   ratings.length.times do |index|
     case index
@@ -47,6 +51,7 @@ def sum_total_ratings(ratings)
   return total_ratings
 end
 
+
 def my_ranker(positive_ratings,total_ratings,standard_deviation)
   if positive_ratings > 0
     #first term ensures that restaurant is popular enough but is asymtpotic in nature so it does not have a major impact after a certain point
@@ -55,13 +60,14 @@ def my_ranker(positive_ratings,total_ratings,standard_deviation)
     # variance will be larger and it will score significantly lower
     return -1/(positive_ratings/60) + (positive_ratings/total_ratings)*2 - (standard_deviation)**2
   else
-    #negative infinity
+    #negative infinity. not worth considering the restuarant
     return -1.0/0.0
   end
 end
 
 def sum_score_method2(ratings)
   #counts score of restaurant. Here, excellent = 2, good = 1, okay =0, bad = -2, terrible = -4
+  #no longer need to assume binary state of reviews for my method of ranking
   score = 0
   ratings.length.times do |index|
     case index

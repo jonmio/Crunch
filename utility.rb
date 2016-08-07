@@ -1,4 +1,4 @@
-#Reusable methods that aren't sepcific to any class or level
+#Reusable methods that aren't sepcific to any class or level of scraping
 
 def extract_geocode(url)
   #string will only containg digits giving the desired geocode
