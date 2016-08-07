@@ -22,19 +22,9 @@ class Restaurant < ActiveRecord::Base
     duplicates = Restaurant.select(:name,:ratings).group(:ratings, :name).having("count(*) > 1").all
     #Deletes duplicates and keeps 1 copy
     duplicates.each do |restaurant|
-      duplicated_restaurant = Restaurant.where(name: restaurant.name).where(ratings: restaurant.ratings)
-      while duplicated_restaurant.length < 1
-        Restaurant.destroy(duplicated_restaurant)
+      while Restaurant.where(name: restaurant.name).where(ratings: restaurant.ratings).length > 1
+        Restaurant.destroy(Restaurant.where(name: restaurant.name).where(ratings: restaurant.ratings).first.id)
       end
-      # cache = Restaurant.where(name: restaurant.name).where(ratings: restaurant.ratings).first
-      # Restaurant.where(name: restaurant.name).where(ratings: restaurant.ratings).destroy_all
-      # Restaurant.create(
-      # name: cache.name,
-      # city: cache.city,
-      # ratings: cache.ratings,
-      # score: cache.score,
-      # total_ratings: cache.total_ratings
-      # )
     end
   end
 

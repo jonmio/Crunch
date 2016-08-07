@@ -14,7 +14,6 @@ require "nokogiri"
 #HTTP client
 require "rest-client"
 
-
 #To find restaurant information, you have to first start from the country page and find all the cities in the country by going through each page and scraping city links
   #Ex. Canada => [Pg1,Pg2....]
   #Ex. Canada Pg 1 => [Toronto, Vancouver....]
@@ -27,13 +26,6 @@ require "rest-client"
 
 #Then you can finally visit the restaurant link to scrape restaurant info
   #Ex. placeholder.com => placeholder's ratingss
-
-
-
-
-
-binding.pry
-
 
 
 
@@ -62,6 +54,7 @@ end
 
 
 
+
 #########FINDS BASE INFORMATION (COUNTRY,GEOCODE)
 
 country_page_url = "#{tripadvisor_root_url}#{country}"
@@ -72,13 +65,12 @@ end_of_url = RestClient.get(country_page_url).request.url.sub("https://www.tripa
 #the country code and the country name act as the starting points for our webscraping adventure
 
 #get country code from redirect url
-country_code = extract_geocode(end_of_url)
+country_code = end_of_url.gsub(/[^\d]/, '')
 
 #change country/city name to tripadvisor's version of the country name the user typed in
 country = end_of_url.split("-")[1]
 
 ##########################################################################################
-
 
 
 
@@ -91,6 +83,7 @@ city_index_links = get_city_index_links(country, country_code)
 puts "done cities"
 
 ##########################################################################################
+
 
 
 
@@ -115,6 +108,7 @@ end
 
 
 
+
 ######### GETS A LINK TO EACH CITY PAGE (CONTAINS 30 RESTAURANT LINKS) AND COLLECTS LINKS TO RESTAURANTS
 #Based on city_index_links and MAP we can access the page1 or index of every city. But the city can have more than 1 page of restaurants...
 #Here we visit every page and collect all the restaurant links on each page
@@ -125,19 +119,14 @@ urls_for_each_city = get_all_city_urls
 
 #Send request to each url and get response
 city_responses = get_responses(urls_for_each_city)
-
-1000.times do
+100.times do
   puts "******************"
 end
-
 #scrape each city page for links to restaruants
 #restaurant_urls is an array of restaurant links
 restaurant_urls = gather_restaurant_links_by_scraping(city_responses)
 
 ##########################################################################################
-
-
-
 
 
 
@@ -150,9 +139,6 @@ restaurant_responses = get_responses(restaurant_urls)
 scrape_restaurant_page(restaurant_responses)
 
 ##########################################################################################
-
-
-
 
 
 

@@ -16,7 +16,6 @@ def get_city_index_links(country,country_code)
   end
 
 
-
   #Go through each page
 
   #For a given country, each page has a very similar format
@@ -70,21 +69,14 @@ def get_map (url_cities)
   #get city name and city geocode based on url from url_cities
   url_cities.each do |city_url|
     geocode = extract_geocode(city_url)
-    name = city_url.split("-")[-1].sub('.html',"")
+    name = city_url.split("-")[2].sub('.html',"")
     map[geocode] = name
   end
   return map
 end
 
 
-# def get_city_geocodes (url_cities)
-#   #geocode is a new array that contains a series of digits that are unique Trip advisor identifiers for each city that will be used later
-#   geocode = url_cities.map do |city_links|
-#      #takes only numeric characters
-#     city_links.gsub(/[^\d]/, '')
-#   end
-#   return geocode
-# end
+
 
 
 
@@ -127,7 +119,6 @@ def get_all_city_urls
     end
 
     count = 0
-
     #generate these urls and append to all_city_urls
     last_page_number.times do |city_page|
       all_city_urls << "#{apistart}#{geocode}#{apimiddle}#{count.to_s}#{apiend}"
@@ -139,10 +130,16 @@ end
 
 
 def gather_restaurant_links_by_scraping(res)
-  #res is a has containing key=geocode, values=response
-  response = res.values
-  restaurant_links = []
+  response = []
 
+  #res is a has containing key=geocode, values=response array
+  res.each do |geocode, response_array|
+    response_array.each do |page_body|
+      response << page_body
+    end
+  end
+
+  restaurant_links = []
   #scrape for restaurant links on each city page
   response.each do |page|
     #find href attribute of every anchor tag with class property_title on each page
@@ -150,26 +147,3 @@ def gather_restaurant_links_by_scraping(res)
   end
   restaurant_links
 end
-#     #Go through each page
-#     last_page_number.times do |city_page|
-#
-#       contents = []
-#
-#       #The api call returns the html for a page given the geocode of the city and another variable called count. Count starts at 0 and increments by 30 per page.
-#       agent.get("#{apistart}#{geocodes[city_number]}#{apimiddle}#{count.to_s}#{apiend}")
-#       count += 30
-#       city_page = agent.page.search("div#EATERY_SEARCH_RESULTS a.property_title")
-#       #Loop to get each link
-#       city_page.each do |link_on_page|
-#         contents << link_on_page['href']
-#       end
-#       #Fill hash value with links
-#       contents.each do |links|        #Loop to put each link in hash
-#         restaurant_links["#{city_names[city_number]}"] << links
-#       end
-#       #Empty array for next iteration
-#       contents = []
-#     end
-#   end
-#   return restaurant_links
-# end

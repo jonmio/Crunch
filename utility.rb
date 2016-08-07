@@ -2,7 +2,10 @@
 
 def extract_geocode(url)
   #string will only containg digits giving the desired geocode
-  url.gsub(/[^\d]/, '')
+  #some urls may not contain geocodes
+  if url.split("-")[1]
+    url.split("-")[1].gsub(/[^\d]/, '')
+  end
 end
 
 
@@ -48,7 +51,14 @@ def get_responses(urls)
       while q.length != 0
         url = q.pop
         res = get(url)
-        semaphore.synchronize{return_values[extract_geocode(url)] = res}
+        geocode = extract_geocode(url)
+        semaphore.synchronize do
+          if return_values.has_key?(geocode)
+            return_values[geocode] << res
+          else
+            return_values[geocode] = [res]
+          end
+        end
         print "#{q.length}\n"
       end
     end
