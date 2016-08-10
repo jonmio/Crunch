@@ -5,7 +5,9 @@ A restaurant recommendation engine based on a custom ranking algorithm
 
 **Output:** Top n restaurants in the city/country
 
-#Why Not Yelp or TripAdvisor?
+
+Why Not Yelp or TripAdvisor?
+============================
 
 1. The most popular restaurant finding platforms like Yelp and TripAdvisor heavily favour large restaurants that have many visitors and reviews, although small restaurants may be just as positively reviewed. On these platforms, you often have to go to page 5+ of a big city to find a restaurant with less than 100 reviews, but these small restaurants turn out to be just as good if not better than large ones.
 
