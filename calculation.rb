@@ -1,3 +1,8 @@
+=begin
+  This library is responsible for all calculations that are done to caculate the score of restaurants including
+  summing up total # of reviews, summing total # of reviews, calculating score of restaurant and finding the standard deivaton
+  of reviews.
+=end
 require 'statistics2'
 
 # Wilson's confidence interval method of ranking. Uses current number of votes as a sample of the whole population.
@@ -9,6 +14,7 @@ def ci_lower_bound(positive_ratings, total_ratings, confidence)
   z = Statistics2.pnormaldist(1-(1-confidence)/2)
   phat = 1.0*positive_ratings/total_ratings
   value = (phat + z*z/(2*total_ratings) - z * Math.sqrt((phat*(1-phat)+z*z/(4*total_ratings))/total_ratings))/(1+z*z/total_ratings)
+  value*10**4
 end
 
 def sum_score_method1(ratings)

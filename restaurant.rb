@@ -1,4 +1,4 @@
-#The restaurant class which includes the schema definition and class methods
+#The restaurant class which includes the schema definition and class methods that manipulat the score column in the database.
 
 require_relative 'calculation'
 

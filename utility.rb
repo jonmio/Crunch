@@ -1,4 +1,8 @@
-# This library contains reusable methods that aren't sepcific to any class or level of scraping
+=begin
+  This library contains reusable methods that aren't sepcific to any class or level of scraping including extracting
+  the geocode from a url, making non-blocking http requests and wrapping a response body in a Nokogiri object so that
+  it can be scraped.
+=end
 
 def extract_geocode(url)
   # Get geocode if url is valid

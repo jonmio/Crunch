@@ -1,4 +1,4 @@
-#This library scrapes a restaurant page and saves all relevant ratings and restaurant info to the db
+#This library scrapes a restaurant page and saves all relevant ratings and restaurant info to the db.
 
 def scrape_restaurant_page(restaurant_page_responses)
   restaurant_page_responses.each do |geocode,responses|
