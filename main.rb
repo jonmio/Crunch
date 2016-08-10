@@ -23,8 +23,7 @@ Then you can finally visit the restaurant link to scrape restaurant info
   Ex. placeholder.com => placeholder's ratings
 =end
 
-require "pry"
-binding.pry
+
 ############# HANDLES INPUT
 
 tripadvisor_root_url = "https://www.tripadvisor.ca/"
