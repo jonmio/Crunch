@@ -7,7 +7,7 @@ A restaurant recommendation engine based on a custom ranking algorithm
 
 
 Why Not Yelp or TripAdvisor?
-============================
+----------------------------
 
 1. The most popular restaurant finding platforms like Yelp and TripAdvisor heavily favour large restaurants that have many visitors and reviews, although small restaurants may be just as positively reviewed. On these platforms, you often have to go to page 5+ of a big city to find a restaurant with less than 100 reviews, but these small restaurants turn out to be just as good if not better than large ones.
 
@@ -19,14 +19,16 @@ Why Not Yelp or TripAdvisor?
 
 *It's time for a better ranking algorithm!*
 
-__Implementation__
+Implementation
+--------------
 
 1. Scrape restaurant reviews.
  * TripAdvisor API only returned the top 10 restaurants in a city. That wasn't enough information to work with.
  * Yelp is supported in less than 30 countries...
 2. Create a ranking algorithm that addresses the two problems listed above.
 
-__About the Ranking Algorithm__
+About the Ranking Algorithm
+---------------------------
 
 **Inputs:** Total # of Ratings, % of Positive Ratings, Standard Deviation of Reviews
 
