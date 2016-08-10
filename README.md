@@ -10,7 +10,9 @@ __Why Not Yelp or TripAdvisor?__
 2. From personal experience, I find that reviewers on these sites are too lenient. They give five-star reviews even when the food is mediocre at best.
 
 ~~Yelp~~
+
 ~~TripAdvisor~~
+
 *It's time for a better ranking algorithm!*
 
 __Implementation__
