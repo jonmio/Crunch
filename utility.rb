@@ -1,4 +1,4 @@
-# Reusable methods that aren't sepcific to any class or level of scraping
+# This library contains reusable methods that aren't sepcific to any class or level of scraping
 
 def extract_geocode(url)
   # Get geocode if url is valid
@@ -15,7 +15,6 @@ def get(url)
 end
 
 
-# Initialize constant for thread pool
 NUM_THREADS = 3
 
 

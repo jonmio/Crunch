@@ -1,4 +1,6 @@
-require_relative 'calculation' #score calculations
+#The restaurant class which includes the schema definition and class methods
+
+require_relative 'calculation'
 
 require 'active_record'
 require 'mini_record'
@@ -13,9 +15,8 @@ class Restaurant < ActiveRecord::Base
   field :score, as: :integer
 
 
-  # Remove all duplicated restaurants if name of entry and ratings are the same. Sometimes TA displays the same restaurant in diff cities
+  # Remove all duplicated restaurants if name of entry and ratings are the same.
   def self.remove_duplicates
-    # find restaurants where name and rating are the same and deletes all but 1 copy
     duplicates = Restaurant.select(:name,:ratings).group(:ratings, :name).having("count(*) > 1").all
     duplicates.each do |restaurant|
       while Restaurant.where(name: restaurant.name).where(ratings: restaurant.ratings).length > 1
@@ -25,12 +26,13 @@ class Restaurant < ActiveRecord::Base
   end
 
 
-  # Searches database for the top n restaurants as specified by user
+  # Searches database for the top n restaurants
   def self.db_query(num)
     Restaurant.all.order(score: :desc).first(num).each do |restaurant|
       puts restaurant.name
     end
   end
+
 =begin
   self.calculate_scores ranks the restaurant based on ratings and total ratings
   Note that any method ending with method1 refers to methods that are used with wilson's confidence interval ranking algorithm while method2 refers to methods that are used with my own ranking algorithm

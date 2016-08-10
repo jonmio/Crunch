@@ -1,3 +1,8 @@
+=begin
+  The city library provides city-level methods including methods that find the urls of each page of
+  a city (Ex. Toronto1, Toronto2) and methods that collect the restaurant urls on every city page.
+=end
+
 def get_city_index_links(country,country_code)
   root_url = "https://www.tripadvisor.ca/Restaurants-g#{country_code}-"
 
@@ -15,8 +20,7 @@ def get_city_index_links(country,country_code)
 =begin
   For a given country, each page has a very similar format
   Ex. https://www.tripadvisor.ca/Restaurants-g#{country_code}-oa{num}-#{country}.html#LOCATION_LIST
-  The only thing that changes between diff pages is num
-  It starts at 0 on page 1 and increases by 20 each page. (20 cities displayed per page)
+  The only thing that changes between diff pages is num, which starts at 0 on page 1 and increases by 20 per page
 =end
 
   num = 0
@@ -55,7 +59,6 @@ def get_city_index_links(country,country_code)
 end
 
 
-
 def get_map (url_cities)
   #create map from url
   map = {}
@@ -66,10 +69,6 @@ def get_map (url_cities)
   end
   return map
 end
-
-
-
-
 
 
 def get_all_city_urls
@@ -90,6 +89,7 @@ def get_all_city_urls
 
   # Loop goes through each city by going through each geocode in MAP
   MAP.each do |geocode,city_name|
+    #Check for broken links
     begin
     page = get("#{apistart}#{geocode}#{apimiddle}0#{apiend}")
     rescue
@@ -97,7 +97,6 @@ def get_all_city_urls
       puts "Error for #{city_name} w/ geocodes #{geocode} on page \# scraper"
     end
 
-    # Skip page if there was a broken link
     if error
       next
     end
@@ -131,7 +130,7 @@ def gather_restaurant_links_by_scraping(res)
 
   restaurant_links = []
   response.each do |page|
-    # Find links to restaraunts
+    # Add links to restaraunts to putput array
     restaurant_links += page.css("a.property_title").map{|link| "https://www.tripadvisor.ca#{link['href']}"}
   end
   restaurant_links

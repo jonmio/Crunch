@@ -1,7 +1,7 @@
-require_relative "city" # All city level methods
-require_relative "scrape_restaurant_page" # Gets and saves restaurant info to db
-require_relative "restaurant" # Restaurant schema and class methods
-require_relative "utility" # Utility methods
+require_relative "city"
+require_relative "scrape_restaurant_page"
+require_relative "restaurant"
+require_relative "utility"
 
 
 # Load html parser and http client
@@ -50,7 +50,6 @@ country_page_url = "#{tripadvisor_root_url}#{country}"
 
 end_of_url = RestClient.get(country_page_url).request.url.sub("https://www.tripadvisor.ca/Tourism-g","")
 
-# The country code and the country name are found in the redirect URL
 country_code = end_of_url.gsub(/[^\d]/, '')
 country = end_of_url.split("-")[1]
 
@@ -70,18 +69,13 @@ if city_index_links == nil
   MAP= {"#{country_code}" => country}
 
 else
-  # Given a goeocde in a URL map will let us know which city the data belongs to
   MAP = get_map(city_index_links)
 end
 
 
 ######### GETS A LINK TO EACH CITY PAGE (CONTAINS 30 RESTAURANT LINKS) AND COLLECTS LINKS TO RESTAURANTS
 
-=begin
-  Based on city_index_links and MAP we can access the page1 or index of every city.
-  But the city can have more than 1 page of restaurants...
-  Here we visit every page and collect all the restaurant links on each page
-=end
+#Based on city_index_links and MAP we can access the page1 or index of every city. Here we visit every page and collect all the restaurant links on each page
 
 puts "getting restaurant links"
 
