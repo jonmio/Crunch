@@ -1,4 +1,4 @@
-# restaurant_finder
+# Crunch
 A restaurant recommendation engine based on a custom ranking algorithm
 
 **Inputs:** City/Country and n(number of restaurants)
