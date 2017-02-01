@@ -34,7 +34,7 @@ while country.split(" ").length > 1
   puts "Invalid format. No spaces allowed. Please use underscores"
   country = gets.chomp()
 end
-
+puts "#{tripadvisor_root_url}#{country}"
 resp = (RestClient.get "#{tripadvisor_root_url}#{country}").code.to_s
 
 if resp.match(/40\d/)

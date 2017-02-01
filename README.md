@@ -6,6 +6,9 @@ A restaurant recommendation engine based on a custom ranking algorithm
 **Output:** Top n restaurants in the city/country
 
 
+**NOTE** Unfortunately, TripAdvisor no longer redirects, so the code will throw a 404 after the country name is entered :(
+
+
 Why Not Yelp or TripAdvisor?
 ----------------------------
 
